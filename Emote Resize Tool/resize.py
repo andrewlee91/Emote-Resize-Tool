@@ -1,6 +1,7 @@
 import os
 import sys
 
+from PIL import Image
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 
@@ -86,14 +87,26 @@ class Ui_MainWindow(object):
             self.imageList.item(i).text() for i in range(self.imageList.count())
         ]
 
-        print(itemList)
+        for item in itemList:
+            if os.path.exists(item):
+                image = Image.open(item)
+                image_size = image.size
+                image_name = image.filename.split(".")[0]
 
-        """
-        Resize logic goes here. Emote sizes;
-        28px
-        56px
-        112px
-        """
+                if image_size[0] % 28 == 0 and image_size[1] % 28 == 0:
+                    image_28 = image.resize((28, 28))
+                    image_28.save(image_name + "_28px.png")
+
+                    image_56 = image.resize((56, 56))
+                    image_56.save(image_name + "_56px.png")
+
+                    image_112 = image.resize((112, 112))
+                    image_112.save(image_name + "_112px.png")
+
+                else:
+                    print("Incorrect dimensions")
+            else:
+                print("Item does not exist")
 
         self.imageList.clear()
 
