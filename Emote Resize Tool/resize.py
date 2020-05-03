@@ -28,16 +28,13 @@ class ListWidget(QtWidgets.QListWidget):
             event.setDropAction(Qt.CopyAction)
             event.accept()
 
-            itemList = []
+            item_list = []
 
             for url in event.mimeData().urls():
                 if url.isLocalFile():
-                    itemList.append(str(url.toLocalFile()))
-                else:
-                    print("File is not local")
+                    item_list.append(str(url.toLocalFile()))
 
-            self.addItems(itemList)
-
+            self.addItems(item_list)
         else:
             event.ignore()
 
@@ -49,7 +46,9 @@ class Ui_MainWindow(object):
         MainWindow.resize(350, 250)
         MainWindow.setMinimumSize(QtCore.QSize(350, 250))
         MainWindow.setMaximumSize(QtCore.QSize(350, 250))
-        # MainWindow.setTabShape(QtWidgets.QTabWidget.Rounded)
+        MainWindow.setWindowIcon(
+            QtGui.QIcon(f"{os.path.dirname(os.path.realpath(__file__))}/icon.svg")
+        )
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -60,6 +59,12 @@ class Ui_MainWindow(object):
         self.progressBar.setTextVisible(False)
         self.progressBar.setOrientation(QtCore.Qt.Horizontal)
         self.progressBar.setObjectName("progressBar")
+
+        self.progressBarLabel = QtWidgets.QLabel(self.centralwidget)
+        self.progressBarLabel.setGeometry(QtCore.QRect(10, 205, 240, 20))
+        self.progressBarLabel.setText("")
+        self.progressBarLabel.setAlignment(Qt.AlignCenter)
+        self.progressBarLabel.setObjectName("progressBarLabel")
 
         self.resizeButton = QtWidgets.QPushButton(self.centralwidget)
         self.resizeButton.setGeometry(QtCore.QRect(260, 200, 80, 30))
@@ -87,7 +92,10 @@ class Ui_MainWindow(object):
             self.imageList.item(i).text() for i in range(self.imageList.count())
         ]
 
-        for item in itemList:
+        number_of_items = len(itemList)
+        skipped_items = 0
+
+        for count, item in enumerate(itemList):
             if os.path.exists(item):
                 image = Image.open(item)
                 image_size = image.size
@@ -104,10 +112,19 @@ class Ui_MainWindow(object):
                     image_112.save(image_name + "_112px.png")
 
                 else:
-                    print("Incorrect dimensions")
+                    skipped_items += 1
             else:
-                print("Item does not exist")
+                skipped_items += 1
 
+            percentage = ((count + 1) * 100) / number_of_items
+            self.progressBar.setValue(percentage)
+
+        if skipped_items > 0:
+            label_text = f"Resize complete! {skipped_items} items skipped"
+        else:
+            label_text = "Resize complete!"
+
+        self.progressBarLabel.setText(label_text)
         self.imageList.clear()
 
 
