@@ -47,7 +47,7 @@ class Ui_MainWindow(object):
         MainWindow.setMinimumSize(QtCore.QSize(350, 250))
         MainWindow.setMaximumSize(QtCore.QSize(350, 250))
         MainWindow.setWindowIcon(
-            QtGui.QIcon(f"{os.path.dirname(os.path.realpath(__file__))}/icon.svg")
+            QtGui.QIcon(f"{os.path.dirname(os.path.realpath(__file__))}/icon.ico")
         )
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
