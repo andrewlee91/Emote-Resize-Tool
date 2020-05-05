@@ -45,9 +45,8 @@ class Ui_MainWindow(object):
         MainWindow.resize(350, 250)
         MainWindow.setMinimumSize(QtCore.QSize(350, 250))
         MainWindow.setMaximumSize(QtCore.QSize(350, 250))
-        MainWindow.setWindowIcon(
-            QtGui.QIcon(f"{os.path.dirname(os.path.realpath(__file__))}/icon.ico")
-        )
+        icon_path = f"{sys._MEIPASS}/Emote Resize Tool/icon.ico"
+        MainWindow.setWindowIcon(QtGui.QIcon(icon_path))
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
