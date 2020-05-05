@@ -1,6 +1,6 @@
 # Emote Resize Tool
 
-A small desktop tool that will resize your emotes for Twitch.
+A small desktop tool that will resize your emotes (and subscriber badges!) for Twitch. 
 
 ![](example.gif)
 
