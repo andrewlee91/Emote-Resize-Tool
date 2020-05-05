@@ -30,9 +30,9 @@ class ListWidget(QtWidgets.QListWidget):
 
             item_list = []
 
-            for url in event.mimeData().urls():
-                if url.isLocalFile():
-                    item_list.append(str(url.toLocalFile()))
+            for item in event.mimeData().urls():
+                if item.isLocalFile():
+                    item_list.append(item.toLocalFile())
 
             self.addItems(item_list)
         else:
@@ -41,7 +41,6 @@ class ListWidget(QtWidgets.QListWidget):
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(350, 250)
         MainWindow.setMinimumSize(QtCore.QSize(350, 250))
@@ -96,7 +95,7 @@ class Ui_MainWindow(object):
         skipped_items = 0
 
         for count, item in enumerate(itemList):
-            if os.path.exists(item):
+            if os.path.exists(item) and item.lower().endswith("png"):
                 image = Image.open(item)
                 image_size = image.size
                 image_name = image.filename.split(".")[0]
@@ -110,7 +109,15 @@ class Ui_MainWindow(object):
 
                     image_112 = image.resize((112, 112))
                     image_112.save(image_name + "_112px.png")
+                elif image_size[0] % 18 == 0 and image_size[1] % 18 == 0:
+                    image_18 = image.resize((18, 18))
+                    image_18.save(image_name + "_18px.png")
 
+                    image_36 = image.resize((36, 36))
+                    image_36.save(image_name + "_36px.png")
+
+                    image_72 = image.resize((72, 72))
+                    image_72.save(image_name + "_72px.png")
                 else:
                     skipped_items += 1
             else:
